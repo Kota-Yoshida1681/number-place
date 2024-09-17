@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Square, SquareComponent } from './square/square.component';
+import { InputNum, Square, SquareComponent } from './square/square.component';
 
 @Component({
   selector: 'app-root',
@@ -18,8 +18,8 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {  }
 
   mode: Mode = "create";
-  forcus: number = 0;
-  inputs: Square[] = Array.from<unknown, Square>({length: 81}, () => ({given: null, answer: null, memo: ''}));
+  forcus: number = -1;
+  inputs: Square[][] = Array.from<unknown, Square[]>({length: 9}, () => Array.from<unknown, Square>({length: 9}, () => ({given: null, answer: null, memo: ''})));
 
 
   changeMode(mode: Mode) {
@@ -28,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   clickSquare(number: number): void {
     if (number === this.forcus) {
-      this.forcus = 0;
+      this.forcus = -1;
     }
     else {
       this.forcus = number;
@@ -38,21 +38,33 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   inputNum(event: KeyboardEvent): void {
-    const num = Number(event.key);
+    if (this.forcus < 0) return;
+    if (this.mode === 'memo') return;
+
+    const num = Number(event.key) as InputNum;
     if (Number.isNaN(num)) return;
 
-    console.log(num);
+    const row = Math.floor(this.forcus / 9);
+    const  line = this.forcus % 9;
+
+    if (this.mode === 'create') {
+      this.inputs[row][line].given = num;
+    }
+    else {
+      this.inputs[row][line].answer = num;
+    }
+    console.log(this.inputs);
   };
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      window.addEventListener('keypress', this.inputNum);
+      window.addEventListener('keypress', (event: KeyboardEvent) => this.inputNum(event));
     }
   };
 
   ngOnDestroy(): void {
     if (isPlatformBrowser(this.platformId)) {
-      window.removeEventListener('keypress', this.inputNum);
+      window.removeEventListener('keypress', (event: KeyboardEvent) => this.inputNum(event));
     }
   }
 }

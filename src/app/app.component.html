@@ -3,7 +3,20 @@
     <h2>ナンプレ{{mode==="create" ? "作成" : "解答"}}</h2>
   </div>
   <div class="main">
-    <app-square (click)="clickSquare(1)" [mode]="mode" [context]="{given: null, answer: null, memo: ''}" [forcused]="forcus===1"></app-square>
+    <table>
+      <tbody>
+        <tr *ngFor="let row of inputs; index as row_i">
+          <td *ngFor="let data of row; index as data_i" [ngClass]="row_i+'_'+data_i">
+            <app-square
+              (click)="clickSquare(row_i*9+data_i)"
+              [mode]="mode" 
+              [context]="data" 
+              [forcused]="forcus===row_i*9+data_i"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div class="footer">
     <button class="btn" (click)="changeMode('answer')" [hidden]="mode==='answer'">解答</button>
