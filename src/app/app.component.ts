@@ -72,6 +72,7 @@ export class AppComponent implements OnInit, OnDestroy {
       if (this.mode === 'create') {
         this.inputs[row][line].given = num as InputNum;
         this.inputs[row][line].answer = null;
+        this.inputs[row][line].memo = '';
         this.outputs[row][line] = num as InputNum;
         this.forcusNumber = num as InputNum;
       }
