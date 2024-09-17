@@ -1,16 +1,19 @@
 import { Component, Input } from '@angular/core';
 import { Mode } from '../app.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-square',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './square.component.html',
   styleUrl: './square.component.scss'
 })
 export class SquareComponent {
-  @Input() number!: Square;
+  @Input() context!: Square;
   @Input() mode!: Mode;
+  @Input() forcused!: boolean;
+
 }
 
 export interface Square {
