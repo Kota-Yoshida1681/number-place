@@ -13,7 +13,7 @@
               [context]="data" 
               [forcused]="forcusIndex === row_i*9+line_i"
               [highlighted]="(data.given || data.answer) === forcusNumber"
-              [validation]="validations[row_i*9+line_i]"
+              [valid]="valids[row_i*9+line_i]"
             />
           </td>
         </tr>

@@ -18,7 +18,7 @@ export class SquareComponent implements OnChanges {
   @Input() mode!: Mode;
   @Input() forcused!: boolean;
   @Input() highlighted!: boolean;
-  @Input() validation!: boolean;
+  @Input() valid!: boolean;
 
   display: 'number' | 'memo' = 'number';
 

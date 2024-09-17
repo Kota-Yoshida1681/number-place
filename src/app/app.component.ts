@@ -22,7 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
   forcusNumber: InputNum = null;
   inputs: Square[][] = Array.from<unknown, Square[]>({length: 9}, () => Array.from<unknown, Square>({length: 9}, () => ({given: null, answer: null, memo: ''})));
   outputs: InputNum[][] = Array.from<unknown, InputNum[]>({length: 9}, () => Array.from<unknown, InputNum>({length: 9}, () => null));
-  validations: boolean[] = Array.from<unknown, boolean>({length: 81}, () => true);
+  valids: boolean[] = Array.from<unknown, boolean>({length: 81}, () => true);
 
   static calcSameFrameIndice(index: number): number[] {
     return [0, 1, 2].map(i => i + Math.floor(index / 3)*3).filter(i => i !== index);
@@ -84,34 +84,34 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // 検証
     for (let i=0; i<9; i+=1) {
-      this.updateValidation(row*9+i);
-      this.updateValidation(i*9+line);
+      this.updatevalid(row*9+i);
+      this.updatevalid(i*9+line);
     }
     for (const row_ of AppComponent.calcSameFrameIndice(row)) {
       for (const line_ of AppComponent.calcSameFrameIndice(line)) {
-        this.updateValidation(row_*9+line_);
+        this.updatevalid(row_*9+line_);
       }
     }
   };
 
-  updateValidation(index: number): void {
+  updatevalid(index: number): void {
     const row = Math.floor(index / 9);
     const line = index % 9;
     const number = this.outputs[row][line];
     if (number === null) {
-      this.validations[index] = true;
+      this.valids[index] = true;
       return;
     }
 
     // 同列を検証
     if (this.outputs[row].some((value, index) => index!==line&&value===number)) {
-      this.validations[index] = false;
+      this.valids[index] = false;
       return;
     };
 
     // 同行を検証
     if (this.outputs.map(row => row[line]).some((value, index) => index!==row&&value===number)) {
-      this.validations[index] = false;
+      this.valids[index] = false;
       return;
     }
 
@@ -119,13 +119,13 @@ export class AppComponent implements OnInit, OnDestroy {
     for (const row_ of AppComponent.calcSameFrameIndice(row)) {
       for (const line_ of AppComponent.calcSameFrameIndice(line)) {
         if (this.outputs[row_][line_]===number) {
-          this.validations[index] = false;
+          this.valids[index] = false;
           return;
         }
       }
     }
 
-    this.validations[index] = true;
+    this.valids[index] = true;
   };
 
   ngOnInit(): void {
