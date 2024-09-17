@@ -6,12 +6,14 @@
     <table>
       <tbody>
         <tr *ngFor="let row of inputs; index as row_i">
-          <td *ngFor="let data of row; index as data_i" [ngClass]="row_i+'_'+data_i">
+          <td *ngFor="let data of row; index as line_i" [ngClass]="row_i+'_'+line_i">
             <app-square
-              (click)="clickSquare(row_i*9+data_i)"
+              (click)="clickSquare(row_i*9+line_i)"
               [mode]="mode" 
               [context]="data" 
-              [forcused]="forcus===row_i*9+data_i"
+              [forcused]="forcusIndex === row_i*9+line_i"
+              [highlighted]="(data.given || data.answer) === forcusNumber"
+              [validation]="validations[row_i*9+line_i]"
             />
           </td>
         </tr>

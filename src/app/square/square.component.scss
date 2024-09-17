@@ -1,6 +1,36 @@
 .grid {
+  display: grid;
   width: 55px;
   height: 55px;
   font-size: 34px;
-  border: solid 1px #333;
+  border: solid 1px rgb(51, 51, 51);
+  text-align: center;
+  align-items: center;
+  &.given {
+    background-color: #CCCCCC;
+  }
+  &.forcused {
+    background-color: #CCFEFE;
+    &.given {
+      background-color: #00FEFE;
+    }
+  }
+  &.highlighted {
+    color: #00AA00;
+  }
+  &.invalid {
+    color: #FF3333;
+  }
+}
+
+.memo {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 0px;
+  font-size: 12px;
+  background-color: transparent;
+}
+textarea.memo {
+  resize: none;
 }

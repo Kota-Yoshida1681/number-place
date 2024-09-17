@@ -1,4 +1,6 @@
-<div class="grid" [ngSwitch]="mode">
-  <ng-container *ngSwitchCase="'create'">
-  </ng-container>
+<div class="grid" [ngClass]="{'forcused':forcused, 'highlighted': highlighted, 'given': context.given, 'invalid': !validation}">
+  <textarea class="memo" *ngIf="display==='memo'; else Number" [(ngModel)]="context.memo"></textarea>
+  <ng-template #Number>
+    {{context.given || context.answer}}
+  </ng-template>
 </div>
