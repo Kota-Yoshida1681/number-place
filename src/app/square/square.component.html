@@ -1,6 +1,6 @@
-<div class="grid" [ngClass]="{'forcused':forcused, 'highlighted': highlighted, 'given': context.given, 'invalid': !validation}">
+<div class="grid" [ngClass]="{'forcused':forcused, 'highlighted': highlighted, 'given': context.given, 'no-answer': !context.given&&!context.answer, 'invalid': !valid}">
   <textarea class="memo" *ngIf="display==='memo'; else Number" [(ngModel)]="context.memo"></textarea>
   <ng-template #Number>
-    {{context.given || context.answer}}
+    {{context.given || context.answer || context.memo}}
   </ng-template>
 </div>

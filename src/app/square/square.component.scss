@@ -21,6 +21,12 @@
   &.invalid {
     color: #FF3333;
   }
+  &.no-answer {
+    font-size: 12px;
+    text-align: left;
+    align-items: start;
+    color: #CCCCCC;
+  }
 }
 
 .memo {
