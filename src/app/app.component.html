@@ -11,7 +11,7 @@
               (click)="clickSquare(row_i*9+line_i)"
               [mode]="mode" 
               [context]="data" 
-              [forcused]="forcusIndex === row_i*9+line_i"
+              [forcused]="row_i*9+line_i === forcusIndex"
               [highlighted]="(data.given || data.answer) === forcusNumber"
               [valid]="valids[row_i*9+line_i]"
             />

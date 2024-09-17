@@ -17,16 +17,62 @@ export class AppComponent implements OnInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {  }
 
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.addEventListener('keyup', (event: KeyboardEvent) => this.inputNum(event));
+    }
+  };
+
+  ngOnDestroy(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.removeEventListener('keyup', (event: KeyboardEvent) => this.inputNum(event));
+    }
+  };
+
+  static calcSameFrameIndice(index: number): number[] {
+    return [0, 1, 2].map(i => i + Math.floor(index / 3)*3).filter(i => i !== index);
+  };
+
+  static validate(src: InputNum[][], index: number): boolean {
+    const row = Math.floor(index / 9);
+    const line = index % 9;
+    const number = src[row][line];
+    if (number === null) {
+      return false;
+    }
+
+    // 同列を検証
+    if (src[row].some((value, index) => index!==line&&value===number)) {
+      return false;
+    };
+
+    // 同行を検証
+    if (src.map(row => row[line]).some((value, index) => index!==row&&value===number)) {
+      return false;
+    }
+
+    // 残りの同枠を検証
+    for (const row_ of AppComponent.calcSameFrameIndice(row)) {
+      for (const line_ of AppComponent.calcSameFrameIndice(line)) {
+        if (src[row_][line_]===number) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }; 
+
+  // static autoAnswer(src: InputNum[][]): InputNum[][] {
+
+  // };
+
   mode: Mode = "create";
   forcusIndex: number = -1;
   forcusNumber: InputNum = null;
   inputs: Square[][] = Array.from<unknown, Square[]>({length: 9}, () => Array.from<unknown, Square>({length: 9}, () => ({given: null, answer: null, memo: ''})));
   outputs: InputNum[][] = Array.from<unknown, InputNum[]>({length: 9}, () => Array.from<unknown, InputNum>({length: 9}, () => null));
   valids: boolean[] = Array.from<unknown, boolean>({length: 81}, () => true);
-
-  static calcSameFrameIndice(index: number): number[] {
-    return [0, 1, 2].map(i => i + Math.floor(index / 3)*3).filter(i => i !== index);
-  };
 
   changeMode(mode: Mode) {
     this.mode = mode;
@@ -85,61 +131,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // 検証
     for (let i=0; i<9; i+=1) {
-      this.updatevalid(row*9+i);
-      this.updatevalid(i*9+line);
+      this.valids[row*9+i] = AppComponent.validate(this.outputs, row*9+i);
+      this.valids[i*9+line] = AppComponent.validate(this.outputs, i*9+line);
     }
     for (const row_ of AppComponent.calcSameFrameIndice(row)) {
       for (const line_ of AppComponent.calcSameFrameIndice(line)) {
-        this.updatevalid(row_*9+line_);
+        this.valids[row_*9+line_] = AppComponent.validate(this.outputs, row_*9+line_);
       }
     }
   };
-
-  updatevalid(index: number): void {
-    const row = Math.floor(index / 9);
-    const line = index % 9;
-    const number = this.outputs[row][line];
-    if (number === null) {
-      this.valids[index] = true;
-      return;
-    }
-
-    // 同列を検証
-    if (this.outputs[row].some((value, index) => index!==line&&value===number)) {
-      this.valids[index] = false;
-      return;
-    };
-
-    // 同行を検証
-    if (this.outputs.map(row => row[line]).some((value, index) => index!==row&&value===number)) {
-      this.valids[index] = false;
-      return;
-    }
-
-    // 残りの同枠を検証
-    for (const row_ of AppComponent.calcSameFrameIndice(row)) {
-      for (const line_ of AppComponent.calcSameFrameIndice(line)) {
-        if (this.outputs[row_][line_]===number) {
-          this.valids[index] = false;
-          return;
-        }
-      }
-    }
-
-    this.valids[index] = true;
-  };
-
-  ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      window.addEventListener('keyup', (event: KeyboardEvent) => this.inputNum(event));
-    }
-  };
-
-  ngOnDestroy(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      window.removeEventListener('keyup', (event: KeyboardEvent) => this.inputNum(event));
-    }
-  }
 }
 
 export type Mode = "create" | "answer" | "memo";
