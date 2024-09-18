@@ -1,5 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { InputNum, Square, SquareComponent } from './square/square.component';
 
 @Component({
@@ -7,6 +8,7 @@ import { InputNum, Square, SquareComponent } from './square/square.component';
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     SquareComponent
   ],
   templateUrl: './app.component.html',
@@ -214,6 +216,19 @@ export class AppComponent implements OnInit, OnDestroy {
       const data = this.datas[row][line];
       this.forcusNumber = data.given || data.answer;
     }
+  };
+
+  init(): void {
+    for (let row=0; row<9; row+=1) {
+      for (let line=0; line<9; line+=1) {
+        this.datas[row][line].given = null;
+        this.datas[row][line].answer = null;
+        this.outputs[row][line] = null;
+      }
+    }
+    this.given_valids.fill(true);
+    this.valids.fill(true);
+    this.forcusNumber = null;
   };
 
   resetAnser(): void {
