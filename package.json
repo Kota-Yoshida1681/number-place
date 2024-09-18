@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --base-href \"https://kota-yoshida1681.github.io/number-place/\"",
+    "deploy": "ng deploy --base-href=https://Kota-Yoshida1681.github.io/number-place/ --repo=https://github.com/Kota-Yoshida1681/number-place.git", 
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:number-place": "node dist/number-place/server/server.mjs"
