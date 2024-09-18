@@ -5,7 +5,7 @@
   <div class="main">
     <table>
       <tbody>
-        <tr *ngFor="let row of inputs; index as row_i">
+        <tr *ngFor="let row of datas; index as row_i">
           <td *ngFor="let data of row; index as line_i" [ngClass]="row_i+'_'+line_i">
             <app-square
               (click)="clickSquare(row_i*9+line_i)"

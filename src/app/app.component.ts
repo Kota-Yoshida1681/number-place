@@ -104,7 +104,7 @@ export class AppComponent implements OnInit, OnDestroy {
   mode: Mode = "create";
   forcusIndex: number = -1;
   forcusNumber: InputNum = null;
-  inputs: Square[][] = Array.from<unknown, Square[]>({length: 9}, () => Array.from<unknown, Square>({length: 9}, () => ({given: null, answer: null, memo: ''})));
+  datas: Square[][] = Array.from<unknown, Square[]>({length: 9}, () => Array.from<unknown, Square>({length: 9}, () => ({given: null, answer: null, memo: ''})));
   private outputs: InputNum[][] = Array.from<unknown, InputNum[]>({length: 9}, () => Array.from<unknown, InputNum>({length: 9}, () => null));
   private given_valids: boolean[] = Array.from<unknown, boolean>({length: 81}, () => true);
   valids: boolean[] = Array.from<unknown, boolean>({length: 81}, () => true);
@@ -139,12 +139,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
     if (event.key === 'Backspace') {
       if (this.mode === 'create') {
-        this.inputs[row][line].given = null;
+        this.datas[row][line].given = null;
         this.outputs[row][line] = null;
         this.forcusNumber = null;
       }
-      else if (this.inputs[row][line].given === null) {
-        this.inputs[row][line].answer = null;
+      else if (this.datas[row][line].given === null) {
+        this.datas[row][line].answer = null;
         this.outputs[row][line] = null;
         this.forcusNumber = null;
       }
@@ -154,14 +154,14 @@ export class AppComponent implements OnInit, OnDestroy {
       if (Number.isNaN(num) || num === 0) return;
 
       if (this.mode === 'create') {
-        this.inputs[row][line].given = num as InputNum;
-        this.inputs[row][line].answer = null;
-        this.inputs[row][line].memo = '';
+        this.datas[row][line].given = num as InputNum;
+        this.datas[row][line].answer = null;
+        this.datas[row][line].memo = '';
         this.outputs[row][line] = num as InputNum;
         this.forcusNumber = num as InputNum;
       }
-      else if (this.inputs[row][line].given === null) {
-        this.inputs[row][line].answer = num as InputNum;
+      else if (this.datas[row][line].given === null) {
+        this.datas[row][line].answer = num as InputNum;
         this.outputs[row][line] = num as InputNum;
         this.forcusNumber = num as InputNum;
       }
@@ -200,9 +200,9 @@ export class AppComponent implements OnInit, OnDestroy {
     ];
     for (let row=0; row<9; row+=1) {
       for (let line=0; line<9; line+=1) {
-        this.inputs[row][line].given = sample[row][line];
-        this.inputs[row][line].answer = null;
-        this.inputs[row][line].memo = '';
+        this.datas[row][line].given = sample[row][line];
+        this.datas[row][line].answer = null;
+        this.datas[row][line].memo = '';
         this.outputs[row][line] = sample[row][line];
       }
     }
@@ -211,7 +211,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.forcusIndex >= 0) {
       const row = Math.floor(this.forcusIndex / 9);
       const line = this.forcusIndex % 9;
-      const data = this.inputs[row][line];
+      const data = this.datas[row][line];
       this.forcusNumber = data.given || data.answer;
     }
   };
@@ -219,8 +219,8 @@ export class AppComponent implements OnInit, OnDestroy {
   resetAnser(): void {
     for (let row=0; row<9; row+=1) {
       for (let line=0; line<9; line+=1) {
-        if (this.inputs[row][line].answer) {
-          this.inputs[row][line].answer = null;
+        if (this.datas[row][line].answer) {
+          this.datas[row][line].answer = null;
           this.outputs[row][line] = null;
         }
       }
@@ -229,20 +229,20 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.forcusIndex >= 0) {
       const row = Math.floor(this.forcusIndex / 9);
       const line = this.forcusIndex % 9;
-      const data = this.inputs[row][line];
+      const data = this.datas[row][line];
       this.forcusNumber = data.given || data.answer;
     }
   };
 
   autoAnswer(): void {
-    const target = this.inputs.map(row => row.map(data => data.given));
+    const target = this.datas.map(row => row.map(data => data.given));
 
     const result = AppComponent.solveNumberPlace(target);
 
     if (result) {
       for (let row=0; row<9; row+=1) {
         for (let line=0; line<9; line+=1) {
-          const data = this.inputs[row][line];
+          const data = this.datas[row][line];
           if (!data.given) {
             data.answer = target[row][line];
             this.outputs[row][line] = target[row][line];
@@ -253,7 +253,7 @@ export class AppComponent implements OnInit, OnDestroy {
       if (this.forcusIndex >= 0) {
         const row = Math.floor(this.forcusIndex / 9);
         const line = this.forcusIndex % 9;
-        const data = this.inputs[row][line];
+        const data = this.datas[row][line];
         this.forcusNumber = data.given || data.answer;
       }
     }
