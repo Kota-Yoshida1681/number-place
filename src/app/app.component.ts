@@ -106,10 +106,13 @@ export class AppComponent implements OnInit, OnDestroy {
   forcusNumber: InputNum = null;
   inputs: Square[][] = Array.from<unknown, Square[]>({length: 9}, () => Array.from<unknown, Square>({length: 9}, () => ({given: null, answer: null, memo: ''})));
   private outputs: InputNum[][] = Array.from<unknown, InputNum[]>({length: 9}, () => Array.from<unknown, InputNum>({length: 9}, () => null));
+  private given_valids: boolean[] = Array.from<unknown, boolean>({length: 81}, () => true);
   valids: boolean[] = Array.from<unknown, boolean>({length: 81}, () => true);
-  get all_valid(): boolean {
-    return this.valids.every(v => v);
+  get given_valid(): boolean {
+    return this.given_valids.every(v => v);
   };
+
+  private updateRelatedValids(index: number) {};
 
   changeMode(mode: Mode) {
     this.mode = mode;
@@ -168,11 +171,18 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // 検証
     for (let i=0; i<9; i+=1) {
+      if (this.mode==='create') {
+        this.given_valids[row*9+i] = AppComponent.validate(this.outputs, row*9+i);
+        this.given_valids[i*9+line] = AppComponent.validate(this.outputs, i*9+line);
+      }
       this.valids[row*9+i] = AppComponent.validate(this.outputs, row*9+i);
       this.valids[i*9+line] = AppComponent.validate(this.outputs, i*9+line);
     }
     for (const row_ of AppComponent.calcSameFrameIndice(row)) {
       for (const line_ of AppComponent.calcSameFrameIndice(line)) {
+        if (this.mode==='create') {
+          this.given_valids[row_*9+line_] = AppComponent.validate(this.outputs, row_*9+line_);
+        }
         this.valids[row_*9+line_] = AppComponent.validate(this.outputs, row_*9+line_);
       }
     }
@@ -209,6 +219,13 @@ export class AppComponent implements OnInit, OnDestroy {
         }
       }
     }
+    this.valids.fill(true);
+    if (this.forcusIndex >= 0) {
+      const row = Math.floor(this.forcusIndex / 9);
+      const line = this.forcusIndex % 9;
+      const data = this.inputs[row][line];
+      this.forcusNumber = data.given || data.answer;
+    }
   };
 
   autoAnswer(): void {
@@ -225,6 +242,13 @@ export class AppComponent implements OnInit, OnDestroy {
             this.outputs[row][line] = target[row][line];
           }
         }
+      }
+      this.valids.fill(true);
+      if (this.forcusIndex >= 0) {
+        const row = Math.floor(this.forcusIndex / 9);
+        const line = this.forcusIndex % 9;
+        const data = this.inputs[row][line];
+        this.forcusNumber = data.given || data.answer;
       }
     }
     else {

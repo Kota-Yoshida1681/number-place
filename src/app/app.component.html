@@ -22,12 +22,12 @@
   </div>
   <div class="footer">
     <div>
-      <button class="btn" (click)="changeMode('answer')" [hidden]="mode==='answer'">解答</button>
+      <button class="btn" (click)="changeMode('answer')" [hidden]="mode==='answer'" [disabled]="!given_valid">解答</button>
       <button class="btn" (click)="changeMode('memo')" [hidden]="mode==='memo'||mode==='create'">メモ</button>
       <button class="btn" (click)="changeMode('create')" [hidden]="mode==='create'">問題の修正</button>
     </div>
     <div>
-      <button class="btn" (click)="autoAnswer()" [hidden]="mode==='create'" [disabled]="!all_valid">自動解答</button>
+      <button class="btn" (click)="autoAnswer()" [hidden]="mode==='create'">自動解答</button>
       <button class="btn" (click)="createSample()" [hidden]="mode!=='create'">サンプル作成</button>
       <button class="btn" (click)="resetAnser()" [hidden]="mode=='create'">解答リセット</button>
     </div>
