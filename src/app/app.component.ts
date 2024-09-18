@@ -208,6 +208,14 @@ export class AppComponent implements OnInit, OnDestroy {
         this.outputs[row][line] = sample[row][line];
       }
     }
+    this.valids.fill(true);
+    this.given_valids.fill(true);
+    if (this.forcusIndex >= 0) {
+      const row = Math.floor(this.forcusIndex / 9);
+      const line = this.forcusIndex % 9;
+      const data = this.inputs[row][line];
+      this.forcusNumber = data.given || data.answer;
+    }
   };
 
   resetAnser(): void {
