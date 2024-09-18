@@ -112,8 +112,6 @@ export class AppComponent implements OnInit, OnDestroy {
     return this.given_valids.every(v => v);
   };
 
-  private updateRelatedValids(index: number) {};
-
   changeMode(mode: Mode) {
     this.mode = mode;
   }
