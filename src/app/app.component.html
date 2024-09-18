@@ -21,6 +21,23 @@
     </table>
   </div>
   <div class="footer">
+    <div [hidden]="mode!=='memo'">
+      <div>
+        <button class="btn" (click)="inputNum('1')">1</button>
+        <button class="btn" (click)="inputNum('2')">2</button>
+        <button class="btn" (click)="inputNum('3')">3</button>
+        <button class="btn" (click)="inputNum('4')">4</button>
+        <button class="btn" (click)="inputNum('5')">5</button>
+      </div>
+      <div>
+        <button class="btn" (click)="inputNum('6')">6</button>
+        <button class="btn" (click)="inputNum('7')">7</button>
+        <button class="btn" (click)="inputNum('8')">8</button>
+        <button class="btn" (click)="inputNum('9')">9</button>
+        <button class="btn" (click)="inputNum('Backspace')">削除</button>
+      </div>
+      <div></div>
+    </div>
     <div>
       <button class="btn" (click)="changeMode('answer')" [hidden]="mode==='answer'" [disabled]="!given_valid">解答</button>
       <button class="btn" (click)="changeMode('memo')" [hidden]="mode==='memo'||mode==='create'">メモ</button>

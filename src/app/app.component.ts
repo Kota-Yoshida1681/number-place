@@ -19,13 +19,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      window.addEventListener('keyup', (event: KeyboardEvent) => this.inputNum(event));
+      window.addEventListener('keyup', (event: KeyboardEvent) => this.inputNum(event.key));
     }
   };
 
   ngOnDestroy(): void {
     if (isPlatformBrowser(this.platformId)) {
-      window.removeEventListener('keyup', (event: KeyboardEvent) => this.inputNum(event));
+      window.removeEventListener('keyup', (event: KeyboardEvent) => this.inputNum(event.key));
     }
   };
 
@@ -130,14 +130,14 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  inputNum(event: KeyboardEvent): void {
+  inputNum(key: string): void {
     if (this.forcusIndex < 0) return;
     if (this.mode === 'memo') return;
 
     const row = Math.floor(this.forcusIndex / 9);
     const line = this.forcusIndex % 9;
 
-    if (event.key === 'Backspace') {
+    if (key === 'Backspace') {
       if (this.mode === 'create') {
         this.datas[row][line].given = null;
         this.outputs[row][line] = null;
@@ -150,7 +150,7 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     }
     else {
-      const num = Number(event.key);
+      const num = Number(key);
       if (Number.isNaN(num) || num === 0) return;
 
       if (this.mode === 'create') {
