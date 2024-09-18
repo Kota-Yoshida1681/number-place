@@ -38,7 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
     const line = index % 9;
     const number = src[row][line];
     if (number === null) {
-      return false;
+      return true;
     }
 
     // 同列を検証
@@ -63,16 +63,53 @@ export class AppComponent implements OnInit, OnDestroy {
     return true;
   }; 
 
-  // static autoAnswer(src: InputNum[][]): InputNum[][] {
+  static solveNumberPlace(grid: InputNum[][]): boolean {
+    const findUnassignedIndex = (grid: InputNum[][]): number => {
+      for (let row=0; row<9; row+=1) {
+        for (let line=0; line<9; line+=1) {
+          if (grid[row][line]===null) {
+            return row*9+line;
+          }
+        }
+      }
+      return -1;
+    };
+    const solve = (): boolean => {
+      const index = findUnassignedIndex(grid);
+      if (index < 0) return true;
 
-  // };
+      const row = Math.floor(index / 9);
+      const line = index % 9;
+
+      for (let num=1; num<=9; num+=1) {
+        grid[row][line] = num as InputNum;
+        if (!AppComponent.validate(grid, index)) {
+          grid[row][line] = null;
+          continue;
+        };
+
+        if (solve()) {
+          return true;
+        }
+
+        grid[row][line] = null;
+      }
+
+      return false;
+    };
+
+    return solve();
+  };
 
   mode: Mode = "create";
   forcusIndex: number = -1;
   forcusNumber: InputNum = null;
   inputs: Square[][] = Array.from<unknown, Square[]>({length: 9}, () => Array.from<unknown, Square>({length: 9}, () => ({given: null, answer: null, memo: ''})));
-  outputs: InputNum[][] = Array.from<unknown, InputNum[]>({length: 9}, () => Array.from<unknown, InputNum>({length: 9}, () => null));
+  private outputs: InputNum[][] = Array.from<unknown, InputNum[]>({length: 9}, () => Array.from<unknown, InputNum>({length: 9}, () => null));
   valids: boolean[] = Array.from<unknown, boolean>({length: 81}, () => true);
+  get all_valid(): boolean {
+    return this.valids.every(v => v);
+  };
 
   changeMode(mode: Mode) {
     this.mode = mode;
@@ -138,6 +175,60 @@ export class AppComponent implements OnInit, OnDestroy {
       for (const line_ of AppComponent.calcSameFrameIndice(line)) {
         this.valids[row_*9+line_] = AppComponent.validate(this.outputs, row_*9+line_);
       }
+    }
+  };
+
+  createSample(): void {
+    const sample: InputNum[][] = [
+      [null, null, null, null,    4, null, null, null, null],
+      [   3, null, null, null, null,    9, null,    5, null],
+      [   7, null,    8, null,    1, null, null, null, null],
+      [null, null,    5, null,    2,    8,    6, null, null],
+      [null, null, null, null, null,    3,    8,    1, null],
+      [null,    6,    1, null, null, null, null,    4, null],
+      [null, null,    9,    8, null, null, null, null, null],
+      [null, null, null, null, null,    7, null, null,    2],
+      [   6,    4, null, null, null, null, null, null, null],
+    ];
+    for (let row=0; row<9; row+=1) {
+      for (let line=0; line<9; line+=1) {
+        this.inputs[row][line].given = sample[row][line];
+        this.inputs[row][line].answer = null;
+        this.inputs[row][line].memo = '';
+        this.outputs[row][line] = sample[row][line];
+      }
+    }
+  };
+
+  resetAnser(): void {
+    for (let row=0; row<9; row+=1) {
+      for (let line=0; line<9; line+=1) {
+        if (this.inputs[row][line].answer) {
+          this.inputs[row][line].answer = null;
+          this.outputs[row][line] = null;
+        }
+      }
+    }
+  };
+
+  autoAnswer(): void {
+    const target = this.inputs.map(row => row.map(data => data.given));
+
+    const result = AppComponent.solveNumberPlace(target);
+
+    if (result) {
+      for (let row=0; row<9; row+=1) {
+        for (let line=0; line<9; line+=1) {
+          const data = this.inputs[row][line];
+          if (!data.given) {
+            data.answer = target[row][line];
+            this.outputs[row][line] = target[row][line];
+          }
+        }
+      }
+    }
+    else {
+      alert('答えが見つかりませんでした');
     }
   };
 }
