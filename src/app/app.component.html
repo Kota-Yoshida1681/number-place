@@ -4,7 +4,7 @@
       <h2>ナンプレ</h2>
     </div>
     <div>
-      <button class="btn" (click)="init()">全リセット</button>
+      <button class="btn" (click)="resetAll()">全リセット</button>
     </div>
     <div class="mode tab-4">
       <label>
@@ -60,7 +60,7 @@
     <div>
       <button class="btn" (click)="autoAnswer()" [hidden]="mode==='create'">自動で解答を作成</button>
       <button class="btn" (click)="createSample()" [hidden]="mode!=='create'">サンプル問題</button>
-      <button class="btn" (click)="resetAnser()" [hidden]="mode=='create'">解答リセット</button>
+      <button class="btn" (click)="resetAnswer()" [hidden]="mode=='create'">解答リセット</button>
     </div>
   </div>
 </div>

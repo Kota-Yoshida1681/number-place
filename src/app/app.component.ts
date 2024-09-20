@@ -31,10 +31,15 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   };
 
+  /** 指定した行番号(または列番号)と同じ枠内の行番号(または列番号)を返す */
   static calcSameFrameIndice(index: number): number[] {
+    // example: 0 => [1, 2]
+    //          2 => [0, 1]
+    //          4 => [3, 5]
     return [0, 1, 2].map(i => i + Math.floor(index / 3)*3).filter(i => i !== index);
   };
 
+  /** srcのindex番目の入力がナンプレとして成立しているかを検証 */
   static validate(src: InputNum[][], index: number): boolean {
     const row = Math.floor(index / 9);
     const line = index % 9;
@@ -218,7 +223,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   };
 
-  init(): void {
+  resetAll(): void {
     for (let row=0; row<9; row+=1) {
       for (let line=0; line<9; line+=1) {
         this.datas[row][line].given = null;
@@ -231,7 +236,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.forcusNumber = null;
   };
 
-  resetAnser(): void {
+  resetAnswer(): void {
     for (let row=0; row<9; row+=1) {
       for (let line=0; line<9; line+=1) {
         if (this.datas[row][line].answer) {
