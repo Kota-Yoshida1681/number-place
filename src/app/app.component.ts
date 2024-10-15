@@ -205,6 +205,50 @@ export class AppComponent implements OnInit, OnDestroy {
       [null, null, null, null, null,    7, null, null,    2],
       [   6,    4, null, null, null, null, null, null, null],
     ];
+
+    const shuffleRow = () => {
+      const block_i = Math.floor(Math.random()*3);
+      const i = block_i*3 + Math.floor(Math.random()*3);
+      const j = block_i*3 + Math.floor(Math.random()*3);
+      for (let line=0; line<9; line+=1) {
+        [sample[i][line], sample[j][line]] = [sample[j][line], sample[i][line]];
+      }
+    };
+    const shuffleLine = () => {
+      const block_i = Math.floor(Math.random()*3);
+      const i = block_i*3 + Math.floor(Math.random()*3);
+      const j = block_i*3 + Math.floor(Math.random()*3);
+      for (let row=0; row<9; row+=1) {
+        [sample[row][i], sample[row][j]] = [sample[row][j], sample[row][i]];
+      }
+    };
+    const shuffleBlockRow = () => {
+      const block_i = Math.floor(Math.random()*3);
+      const block_j = Math.floor(Math.random()*3);
+      for (let line=0; line<9; line+=1) {
+        for (let i=0; i<3; i+=1)
+        [sample[block_i*3+i][line], sample[block_j*3+i][line]] = [sample[block_j*3+i][line], sample[block_i*3+i][line]];
+      }
+    };
+    const shuffleBlockLine = () => {
+      const block_i = Math.floor(Math.random()*3);
+      const block_j = Math.floor(Math.random()*3);
+      for (let row=0; row<9; row+=1) {
+        for (let i=0; i<3; i+=1) {
+          [sample[row][block_i*3+i], sample[row][block_j*3+i]] = [sample[row][block_j*3+i], sample[row][block_i*3+i]];
+        }
+      }
+    };
+
+    for (let i=0; i<6; i+=1) {
+      shuffleBlockRow();
+      shuffleBlockLine();
+      for (let j=0; j<6; j+=1) {
+        shuffleRow();
+        shuffleLine();
+      }
+    }
+
     for (let row=0; row<9; row+=1) {
       for (let line=0; line<9; line+=1) {
         this.datas[row][line].given = sample[row][line];
