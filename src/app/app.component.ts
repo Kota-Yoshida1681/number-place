@@ -141,9 +141,11 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.forcusIndex < 0) return;
     if (this.mode === 'memo') return;
 
+    // 入力対象
     const row = Math.floor(this.forcusIndex / 9);
     const line = this.forcusIndex % 9;
 
+    // モードに合わせて、入力処理
     if (key === 'Backspace') {
       if (this.mode === 'create') {
         this.datas[row][line].given = null;
@@ -194,7 +196,7 @@ export class AppComponent implements OnInit, OnDestroy {
   };
 
   createSample(): void {
-    const sample: InputNum[][] = [
+    const SAMPLE: InputNum[][] = [
       [null, null, null, null,    4, null, null, null, null],
       [   3, null, null, null, null,    9, null,    5, null],
       [   7, null,    8, null,    1, null, null, null, null],
@@ -211,7 +213,7 @@ export class AppComponent implements OnInit, OnDestroy {
       const i = block_i*3 + Math.floor(Math.random()*3);
       const j = block_i*3 + Math.floor(Math.random()*3);
       for (let line=0; line<9; line+=1) {
-        [sample[i][line], sample[j][line]] = [sample[j][line], sample[i][line]];
+        [SAMPLE[i][line], SAMPLE[j][line]] = [SAMPLE[j][line], SAMPLE[i][line]];
       }
     };
     const shuffleLine = () => {
@@ -219,7 +221,7 @@ export class AppComponent implements OnInit, OnDestroy {
       const i = block_i*3 + Math.floor(Math.random()*3);
       const j = block_i*3 + Math.floor(Math.random()*3);
       for (let row=0; row<9; row+=1) {
-        [sample[row][i], sample[row][j]] = [sample[row][j], sample[row][i]];
+        [SAMPLE[row][i], SAMPLE[row][j]] = [SAMPLE[row][j], SAMPLE[row][i]];
       }
     };
     const shuffleBlockRow = () => {
@@ -227,7 +229,7 @@ export class AppComponent implements OnInit, OnDestroy {
       const block_j = Math.floor(Math.random()*3);
       for (let line=0; line<9; line+=1) {
         for (let i=0; i<3; i+=1)
-        [sample[block_i*3+i][line], sample[block_j*3+i][line]] = [sample[block_j*3+i][line], sample[block_i*3+i][line]];
+        [SAMPLE[block_i*3+i][line], SAMPLE[block_j*3+i][line]] = [SAMPLE[block_j*3+i][line], SAMPLE[block_i*3+i][line]];
       }
     };
     const shuffleBlockLine = () => {
@@ -235,11 +237,12 @@ export class AppComponent implements OnInit, OnDestroy {
       const block_j = Math.floor(Math.random()*3);
       for (let row=0; row<9; row+=1) {
         for (let i=0; i<3; i+=1) {
-          [sample[row][block_i*3+i], sample[row][block_j*3+i]] = [sample[row][block_j*3+i], sample[row][block_i*3+i]];
+          [SAMPLE[row][block_i*3+i], SAMPLE[row][block_j*3+i]] = [SAMPLE[row][block_j*3+i], SAMPLE[row][block_i*3+i]];
         }
       }
     };
 
+    // シャッフル(シャッフル回数は適当)
     for (let i=0; i<6; i+=1) {
       shuffleBlockRow();
       shuffleBlockLine();
@@ -249,16 +252,19 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     }
 
+    // サンプル入力
     for (let row=0; row<9; row+=1) {
       for (let line=0; line<9; line+=1) {
-        this.datas[row][line].given = sample[row][line];
+        this.datas[row][line].given = SAMPLE[row][line];
         this.datas[row][line].answer = null;
         this.datas[row][line].memo = '';
-        this.outputs[row][line] = sample[row][line];
+        this.outputs[row][line] = SAMPLE[row][line];
       }
     }
+    // valid状態を全てtrueにする
     this.valids.fill(true);
     this.given_valids.fill(true);
+    // フォーカスされたグリッドがあれば、フォーカス中の数字を更新
     if (this.forcusIndex >= 0) {
       const row = Math.floor(this.forcusIndex / 9);
       const line = this.forcusIndex % 9;
