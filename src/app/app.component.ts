@@ -208,6 +208,11 @@ export class AppComponent implements OnInit, OnDestroy {
       [   6,    4, null, null, null, null, null, null, null],
     ];
 
+    const shuffledNums = (() => {
+      const nums = Array.from({length: 9}, (_, i) => i+1) as InputNum[];
+      return nums.sort(() => Math.random() - 0.5);
+    })();
+
     const shuffleRow = () => {
       const block_i = Math.floor(Math.random()*3);
       const i = block_i*3 + Math.floor(Math.random()*3);
@@ -249,6 +254,14 @@ export class AppComponent implements OnInit, OnDestroy {
       for (let j=0; j<6; j+=1) {
         shuffleRow();
         shuffleLine();
+      }
+    }
+    for (let row=0; row<9; row+=1) {
+      for (let line=0; line<9; line+=1) {
+        const num = SAMPLE[row][line];
+        if (num!==null) {
+          SAMPLE[row][line] = shuffledNums[num-1];
+        }
       }
     }
 
